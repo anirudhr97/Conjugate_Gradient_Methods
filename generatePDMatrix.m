@@ -18,5 +18,4 @@ function [matrix] = generatePDMatrix(n)
 	%Constructing the positive definite matrix using eig_vals and V corresponding to matrix temp
 	matrix = V*diag(eig_vals)*V';
 end
-    
-    
+ 
