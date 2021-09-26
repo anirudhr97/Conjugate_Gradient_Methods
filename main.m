@@ -28,7 +28,7 @@ b_orig = rand(N,1);
 b = b_orig + noise * rand(N,1);
 
 %Optimal solution to the linear equation Ax = b
-x_opt = linsolve(A, b);
+x_opt = linsolve(A, b_orig);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -44,18 +44,23 @@ tolerance = 1e-6;
 [x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance);
 
 %Plotting log of norm of gradient of loss function
+subplot(1,3,1);
 plot(log(gf_hist),'r','LineWidth',1);
 grid;
 title('Norm of Gradient of Loss vs Iterations');
 ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex');
 xlabel('Iterations');
 
+%Plotting eigen values of A
+subplot(1,3,2);
+plot(sort(eig(A),'descend'),'x-','LineWidth',1);
+grid;
+title('Eigenvalues of A');
 
-
-
-
-
-
-
-
-
+%Plotting log of norm of gradient of loss function
+sz = size(x_hist);
+subplot(1,3,3);
+plot(log( vecnorm( x_hist- repmat(x_opt,[1,sz(2)]) ) ),'b-x','LineWidth',1); grid;
+ylabel('$\|x_k-x^*\|$','interpreter','latex');
+xlabel('Iterations');
+title('Norm of error vs Iterations');
