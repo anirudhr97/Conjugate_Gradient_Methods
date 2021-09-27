@@ -57,35 +57,62 @@ tolerance = 1e-6;
 %Calling the conjugateGrad function
 [x_hist, gf_hist, time_taken, num_iters] = conjugateGrad(A, b, x0, max_iter, tolerance);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %Plotting log of norm of gradient of loss function
 figure;
-subplot(2,2,1);
+subplot(2,3,1);
 plot(0:num_iters, log(gf_hist),'r','LineWidth',1);
 grid;
-title('Norm of Gradient of Loss vs Iterations');
-ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex');
-xlabel('Iterations');
+title('Norm of Gradient of Loss vs Iterations', 'FontSize', 10);
+ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex', 'FontSize', 10);
+xlabel('Iterations', 'FontSize', 8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Plotting eigen values of A
-subplot(2,2,2);
-plot(sort(eig(A),'descend'),'x-','LineWidth',1);
+subplot(2,3,2);
+plot(sort(eig(A),'descend'),'Marker', 'x','LineStyle', '-', 'Color', [0.4940 0.1840 0.5560],'LineWidth',1);
 grid;
-title('Eigenvalues of A');
+title('Eigenvalues of A', 'FontSize', 10);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Plotting log of norm of gradient of loss function
-subplot(2,2,3);
-plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'b-x','LineWidth',1); grid;
-ylabel('$log(\|x_k-x^*\| )$','interpreter','latex');
-xlabel('Iterations');
-title('Norm of error vs Iterations');
+subplot(2,3,3);
+plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'r-x','LineWidth',1); grid;
+ylabel('$log(\|x_k-x^*\| )$','interpreter','latex', 'FontSize', 10);
+xlabel('Iterations', 'FontSize', 8);
+title('Norm of error vs Iterations', 'FontSize', 10);
 
-%Plotting time taken for the CGM
-subplot(2,2,4);
-plot(0:num_iters, 10^6*time_taken,'b','LineWidth',1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Plotting time taken
+subplot(2,3,4);
+plot(0:num_iters, 10^6*time_taken,'r','LineWidth',1);
 grid;
-title('Time Taken vs Iterations');
-ylabel('Time Taken ($\mu s$)','interpreter','latex');
-xlabel('Iterations');
+title('Time Taken vs Iterations', 'FontSize', 10);
+ylabel('Time Taken ($\mu s$)','interpreter','latex', 'FontSize', 10);
+xlabel('Iterations', 'FontSize', 8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Plotting cumulative time taken vs iterations
+%Calculating cumulative times taken
+time_taken_cum = zeros(num_iters+1, 1);
+time_taken_cum(1) = time_taken(1);
+for i=2:num_iters+1
+    time_taken_cum(i) = time_taken_cum(i-1) + time_taken(i);
+end
+
+subplot(2,3,5);
+plot(0:num_iters, 10^6*time_taken_cum,'r','LineWidth',1);
+grid;
+title('Cumulative Time Taken vs Iterations', 'FontSize', 10);
+ylabel('Cumulative Time Taken ($\mu s$)','interpreter','latex', 'FontSize', 10);
+xlabel('Iterations', 'FontSize', 8);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Plotting the values taken by the loss function for each x in x_hist
 %Defining the loss function
@@ -97,10 +124,13 @@ for i=1:(num_iters+1)
     func_vals(i, 1) = f(x_hist(:, i));
 end
 
-figure;
+subplot(2,3,6);
 plot(0:num_iters, func_vals,'r','LineWidth',1);
 grid;
-title('Loss Function vs Iterations');
-ylabel('$\phi (x)$', 'interpreter', 'latex');
-xlabel('Iterations');
+title('Loss Function vs Iterations', 'FontSize', 10);
+ylabel('$\phi (x)$', 'interpreter', 'latex', 'FontSize', 10);
+xlabel('Iterations', 'FontSize', 8);
+
+% %Saving the plot generated
+% print('plot','-dpng');
 
