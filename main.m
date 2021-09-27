@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EE5121 - Convex Optimization
 % Conjugate Gradient Method
@@ -9,9 +9,9 @@
 
 %Clearing and closing all figures
 clear
-close all
+close all;
 %Clear screen
-clc
+clc;
 %Seeding the random number generator for reproducibility
 rng(5, 'twister');
 
@@ -56,6 +56,7 @@ tolerance = 1e-6;
 
 %Calling the conjugateGrad function
 [x_hist, gf_hist, time_taken, num_iters] = conjugateGrad(A, b, x0, max_iter, tolerance);
+[x_hist_pre, gf_hist_pre, time_taken_pre, num_iters_pre] = preconditionedCG(A, b, x0, max_iter, tolerance);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -63,6 +64,8 @@ tolerance = 1e-6;
 figure;
 subplot(2,3,1);
 plot(0:num_iters, log(gf_hist),'r','LineWidth',1);
+hold on;
+plot(0:num_iters, log(gf_hist_pre),'r','LineWidth',1);
 grid;
 title('Norm of Gradient of Loss vs Iterations', 'FontSize', 10);
 ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex', 'FontSize', 10);
@@ -81,6 +84,8 @@ title('Eigenvalues of A', 'FontSize', 10);
 %Plotting log of norm of gradient of loss function
 subplot(2,3,3);
 plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'r-x','LineWidth',1); grid;
+hold on;
+plot(0:num_iters, log( vecnorm( x_hist_pre- x_opt ) ),'r-x','LineWidth',1); grid;
 ylabel('$log(\|x_k-x^*\| )$','interpreter','latex', 'FontSize', 10);
 xlabel('Iterations', 'FontSize', 8);
 title('Norm of error vs Iterations', 'FontSize', 10);
@@ -124,8 +129,15 @@ for i=1:(num_iters+1)
     func_vals(i, 1) = f(x_hist(:, i));
 end
 
+func_vals_pre = zeros(num_iters_pre+1, 1);
+for i=1:(num_iters+1)
+    func_vals_pre(i, 1) = f(x_hist_pre(:, i));
+end
+
 subplot(2,3,6);
 plot(0:num_iters, func_vals,'r','LineWidth',1);
+hold on;
+plot(0:num_iters, func_vals_pre,'r','LineWidth',1);
 grid;
 title('Loss Function vs Iterations', 'FontSize', 10);
 ylabel('$\phi (x)$', 'interpreter', 'latex', 'FontSize', 10);
