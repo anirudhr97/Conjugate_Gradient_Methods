@@ -14,6 +14,10 @@ function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter,
 	%	k			Number of iterations that actually occurred
 	%%%%%%%%%%%%%%
 
+    %     Preconditioning
+    C = ichol(sparse(A)); % CHECK THIS
+    Minv = inv(C*C');
+    
 	%Starting measurement of time for initialization tasks
 	tic
 

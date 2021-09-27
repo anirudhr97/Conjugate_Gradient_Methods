@@ -1,4 +1,4 @@
-[%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EE5121 - Convex Optimization
 % Conjugate Gradient Method
@@ -59,18 +59,20 @@ tolerance = 1e-6;
 [x_hist_pre, gf_hist_pre, time_taken_pre, num_iters_pre] = preconditionedCG(A, b, x0, max_iter, tolerance);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+name1 = 'Direct';
+name2 = 'Preconditioned';
 
 %Plotting log of norm of gradient of loss function
 figure;
 subplot(2,3,1);
-plot(0:num_iters, log(gf_hist),'r','LineWidth',1);
+plot(0:num_iters, log(gf_hist),'r','LineWidth',1,'DisplayName',name1);
 hold on;
-plot(0:num_iters, log(gf_hist_pre),'r','LineWidth',1);
+plot(0:num_iters_pre, log(gf_hist_pre),'r','LineWidth',1,'DisplayName',name2);
 grid;
 title('Norm of Gradient of Loss vs Iterations', 'FontSize', 10);
 ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex', 'FontSize', 10);
 xlabel('Iterations', 'FontSize', 8);
-
+legend();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Plotting eigen values of A
@@ -83,13 +85,13 @@ title('Eigenvalues of A', 'FontSize', 10);
 
 %Plotting log of norm of gradient of loss function
 subplot(2,3,3);
-plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'r-x','LineWidth',1); grid;
+plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'r-x','LineWidth',1,'DisplayName',name1); grid;
 hold on;
-plot(0:num_iters, log( vecnorm( x_hist_pre- x_opt ) ),'r-x','LineWidth',1); grid;
+plot(0:num_iters_pre, log( vecnorm( x_hist_pre- x_opt ) ),'r-x','LineWidth',1,'DisplayName',name2); grid;
 ylabel('$log(\|x_k-x^*\| )$','interpreter','latex', 'FontSize', 10);
 xlabel('Iterations', 'FontSize', 8);
 title('Norm of error vs Iterations', 'FontSize', 10);
-
+legend();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Plotting time taken
@@ -130,19 +132,19 @@ for i=1:(num_iters+1)
 end
 
 func_vals_pre = zeros(num_iters_pre+1, 1);
-for i=1:(num_iters+1)
+for i=1:(num_iters_pre+1)
     func_vals_pre(i, 1) = f(x_hist_pre(:, i));
 end
 
 subplot(2,3,6);
-plot(0:num_iters, func_vals,'r','LineWidth',1);
+plot(0:num_iters, func_vals,'r','LineWidth',1,'DisplayName',name1);
 hold on;
-plot(0:num_iters, func_vals_pre,'r','LineWidth',1);
+plot(0:num_iters_pre, func_vals_pre,'r','LineWidth',1,'DisplayName',name2);
 grid;
 title('Loss Function vs Iterations', 'FontSize', 10);
 ylabel('$\phi (x)$', 'interpreter', 'latex', 'FontSize', 10);
 xlabel('Iterations', 'FontSize', 8);
-
+legend();
 % %Saving the plot generated
 % print('plot','-dpng');
 
