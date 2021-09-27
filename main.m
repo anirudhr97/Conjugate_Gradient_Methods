@@ -18,7 +18,7 @@ rng(5, 'twister');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Generating a symmetric positive definite matrix
-mat = generatePDMatrix(5);
+mat = generatePDMatrix(5, 25);
 %Extracting eigen values of B
 eig_values = eig(mat);
 %Checking if eigen values are all >0
@@ -32,9 +32,13 @@ end
 N = 50;
 %Amplitude of noise added to original b
 noise = 0;
+%Factor multiplied with b_orig
+mult = 1;
+%Maximum eigen value we are willing to allow
+max_eig = N^2;
 %Generating matrix A and column vector b for calculations
-A = generatePDMatrix(N);
-b_orig = rand(N,1);
+A = generatePDMatrix(N, max_eig);
+b_orig = mult * rand(N,1);
 b = b_orig + noise * rand(N,1);
 
 %Optimal solution to the linear equation Ax = b
@@ -70,7 +74,7 @@ title('Eigenvalues of A');
 
 %Plotting log of norm of gradient of loss function
 subplot(2,2,3);
-plot(0:num_iters, log( vecnorm( x_hist- repmat(x_opt,[1,num_iters+1]) ) ),'b-x','LineWidth',1); grid;
+plot(0:num_iters, log( vecnorm( x_hist- x_opt ) ),'b-x','LineWidth',1); grid;
 ylabel('$log(\|x_k-x^*\| )$','interpreter','latex');
 xlabel('Iterations');
 title('Norm of error vs Iterations');
@@ -86,7 +90,6 @@ xlabel('Iterations');
 %Plotting the values taken by the loss function for each x in x_hist
 %Defining the loss function
 f = @(x) 0.5*x'*A*x - b'*x;
-f(x_opt)
 
 %Calculating loss value at columns in x_hist
 func_vals = zeros(num_iters+1, 1);
@@ -95,12 +98,9 @@ for i=1:(num_iters+1)
 end
 
 figure;
-plot(0:num_iters, log(func_vals),'r','LineWidth',1);
+plot(0:num_iters, func_vals,'r','LineWidth',1);
 grid;
-title('Log of Loss Function vs Iterations');
-ylabel('$log(\phi (x))$', 'interpreter', 'latex');
+title('Loss Function vs Iterations');
+ylabel('$\phi (x)$', 'interpreter', 'latex');
 xlabel('Iterations');
 
-
-%%%%%%% The complex warning comes because we are taking log of negative numbers.
-%%%%%%% Idk why loss func goes to negative values at iteration 14
