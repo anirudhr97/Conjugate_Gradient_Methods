@@ -7,6 +7,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%Clearing and closing all figures
+clear
+close all
+%Clear screen
+clc
+%Seeding the random number generator for reproducibility
+rng(1, 'twister');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %Generating a symmetric positive definite matrix
 mat = generatePDMatrix(5);
 %Extracting eigen values of B
@@ -44,6 +54,7 @@ tolerance = 1e-6;
 [x_hist, gf_hist, time_taken, num_iters] = conjugateGrad(A, b, x0, max_iter, tolerance);
 
 %Plotting log of norm of gradient of loss function
+figure;
 subplot(2,2,1);
 plot(0:num_iters, log(gf_hist),'r','LineWidth',1);
 grid;
@@ -70,5 +81,5 @@ subplot(2,2,4);
 plot(0:num_iters, 10^6*time_taken,'b','LineWidth',1);
 grid;
 title('Time Taken vs Iterations');
-ylabel('Time Taken (micro seconds)');
+ylabel('Time Taken ($\mu s$)','interpreter','latex');
 xlabel('Iterations');
