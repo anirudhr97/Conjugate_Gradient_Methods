@@ -41,26 +41,34 @@ max_iter = N;
 tolerance = 1e-6;
 
 %Calling the conjugateGrad function
-[x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance);
+[x_hist, gf_hist, time_taken, num_iters] = conjugateGrad(A, b, x0, max_iter, tolerance);
 
 %Plotting log of norm of gradient of loss function
-subplot(1,3,1);
-plot(log(gf_hist),'r','LineWidth',1);
+subplot(2,2,1);
+plot(0:num_iters, log(gf_hist),'r','LineWidth',1);
 grid;
 title('Norm of Gradient of Loss vs Iterations');
 ylabel('$log( \| \nabla \phi (x) \| )$','interpreter','latex');
 xlabel('Iterations');
 
 %Plotting eigen values of A
-subplot(1,3,2);
+subplot(2,2,2);
 plot(sort(eig(A),'descend'),'x-','LineWidth',1);
 grid;
 title('Eigenvalues of A');
 
 %Plotting log of norm of gradient of loss function
 sz = size(x_hist);
-subplot(1,3,3);
-plot(log( vecnorm( x_hist- repmat(x_opt,[1,sz(2)]) ) ),'b-x','LineWidth',1); grid;
-ylabel('$\|x_k-x^*\|$','interpreter','latex');
+subplot(2,2,3);
+plot(0:num_iters, log( vecnorm( x_hist- repmat(x_opt,[1,sz(2)]) ) ),'b-x','LineWidth',1); grid;
+ylabel('$log(\|x_k-x^*\| )$','interpreter','latex');
 xlabel('Iterations');
 title('Norm of error vs Iterations');
+
+%Plotting time taken for the CGM
+subplot(2,2,4);
+plot(0:num_iters, 10^6*time_taken,'b','LineWidth',1);
+grid;
+title('Time Taken vs Iterations');
+ylabel('Time Taken (micro seconds)');
+xlabel('Iterations');

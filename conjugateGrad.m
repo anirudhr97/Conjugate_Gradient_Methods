@@ -1,4 +1,4 @@
-function [x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance)
+function [x_hist, gf_hist, time_taken, k] = conjugateGrad(A, b, x0, max_iter, tolerance)
 	%%%%%%%%%%%%%%
 	% Function to run the Conjugate Gradient Method(CGM).
 	% Argument: 
@@ -10,7 +10,12 @@ function [x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance)
 	% Return:
 	% 	x_hist		History of values taken by x through the iterations
 	%   gf_hist     History of norm of gradient of loss function through the iterations
+	%	time_taken	Time taken for execution of each iteration
+	%	k			Number of iterations that actually occurred
 	%%%%%%%%%%%%%%
+
+	%Starting measurement of time for initialization tasks
+	tic
 
 	%The gradient of loss function
 	gradf = @(x) A*x - b;
@@ -23,10 +28,17 @@ function [x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance)
 	x_hist = [x];
 	gf_hist = [norm(r)];
 	k = 0;
-	%Displaying values before any iteration
-	disp(['CG: k=0, gf=' num2str(norm(r))]);
+
+	%Logging the time taken before iterating
+	time_taken = toc;
+
+	%Displaying values before the iterations
+	disp(['CG: k=0, gf=' num2str(norm(r)) '  , time elapsed: ' num2str(time_taken*10^6) ' micro seconds']);
 
 	while norm(r) > tolerance && k < max_iter
+		%Starting measurement of time for this iteration
+		tic
+
 		%Step size calculated according to CGM		
 		step_size = r'*r/(p'*A*p);
 		%Update of x
@@ -42,8 +54,15 @@ function [x_hist, gf_hist] = conjugateGrad(A, b, x0, max_iter, tolerance)
 		%Storing the norm of grad and updated x
 		gf_hist = [gf_hist, norm(r_new)];
 		x_hist = [x_hist, x_new];
-		%Updating variables for next iteration
+		%Updating iterate for next iteration
 		k = k+1;
-		disp(['CG: k=' num2str(k) ', gf=' num2str(norm(r_new))]);
+
+		%Ending measurement of time and logging
+		time_taken = [time_taken, toc];
+
+		disp(['CG: k=' num2str(k) ', gf=' num2str(norm(r_new)) '  , time elapsed: ' num2str(time_taken(end)*10^6) ' micro seconds']);
 	end
+	%Displaying relevant details of the CGM execution
+	fprintf('\n');
+	disp(['Total number of iterations: ' num2str(k) ' , Total time taken: ' num2str(sum(time_taken)*10^6) ' micro seconds']);
 end
