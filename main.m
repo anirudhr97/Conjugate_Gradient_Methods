@@ -165,5 +165,5 @@ legend();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % %Saving the plot generated
-% print('plot','-dpng');
+% print('plot','-deps');
 
