@@ -40,7 +40,10 @@ function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter,
 	time_taken = toc;
 
 	%Displaying values before the iterations
-	disp(['CG: k=0, gf=' num2str(norm(r)) '  , time elapsed: ' num2str(time_taken*10^6) ' micro seconds']);
+	fprintf('\n');
+	disp('Preconditioned Conjugate Gradient Method:')
+	fprintf('\n');
+	disp(['PCG: k=0, gf=' num2str(norm(r)) '  , time elapsed: ' num2str(time_taken*10^6) ' micro seconds']);
 
 	while norm(r) > tolerance && k < max_iter
 		%Starting measurement of time for this iteration
@@ -70,9 +73,10 @@ function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter,
 		%Ending measurement of time and logging
 		time_taken = [time_taken, toc];
 
-		disp(['CG: k=' num2str(k) ', gf=' num2str(norm(r_new)) '  , time elapsed: ' num2str(time_taken(end)*10^6) ' micro seconds']);
+		disp(['PCG: k=' num2str(k) ', gf=' num2str(norm(r_new)) '  , time elapsed: ' num2str(time_taken(end)*10^6) ' micro seconds']);
 	end
 	%Displaying relevant details of the CGM execution
 	fprintf('\n');
 	disp(['Total number of iterations: ' num2str(k) ' , Total time taken: ' num2str(sum(time_taken)*10^6) ' micro seconds']);
+	fprintf('\n');
 end

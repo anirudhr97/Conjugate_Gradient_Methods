@@ -33,6 +33,9 @@ function [x_hist, gf_hist, time_taken, k] = conjugateGrad(A, b, x0, max_iter, to
 	time_taken = toc;
 
 	%Displaying values before the iterations
+	fprintf('\n');
+	disp('Vanilla Conjugate Gradient Method:')
+	fprintf('\n');
 	disp(['CG: k=0, gf=' num2str(norm(r)) '  , time elapsed: ' num2str(time_taken*10^6) ' micro seconds']);
 
 	while norm(r) > tolerance && k < max_iter
@@ -65,4 +68,5 @@ function [x_hist, gf_hist, time_taken, k] = conjugateGrad(A, b, x0, max_iter, to
 	%Displaying relevant details of the CGM execution
 	fprintf('\n');
 	disp(['Total number of iterations: ' num2str(k) ' , Total time taken: ' num2str(sum(time_taken)*10^6) ' micro seconds']);
+	fprintf('\n');
 end
