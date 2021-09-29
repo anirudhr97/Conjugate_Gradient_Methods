@@ -1,6 +1,6 @@
-function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter, tolerance)
+function [x_hist, gf_hist, time_taken, k, eig_values, kappa] = preconditionedCG(A, b, x0, max_iter, tolerance)
 	%%%%%%%%%%%%%%
-	% Function to run the Conjugate Gradient Method(CGM).
+	% Function to run the Preconditioned Conjugate Gradient Method(CGM).
 	% Argument: 
 	% 	A			Symmetric PD matrix describing the linear system
 	% 	b			Target of the linear system
@@ -12,16 +12,18 @@ function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter,
 	%   gf_hist     History of norm of gradient of loss function through the iterations
 	%	time_taken	Time taken for execution of each iteration
 	%	k			Number of iterations that actually occurred
+	%	eig_values	Eigenvalues of Ahat
+	%	kappa		Condition number of Ahat
 	%%%%%%%%%%%%%%
+
+	%Starting measurement of time for initialization tasks
+	tic
 
     %     Preconditioning
     op.type = 'ict';
     op.droptol = 1e-2;
-    C = ichol(sparse(A),op); % CHECK THIS
+    C = ichol(sparse(A),op);
     Minv = inv(C*C');
-    
-	%Starting measurement of time for initialization tasks
-	tic
 
 	%The gradient of loss function
 	gradf = @(x) A*x - b;
@@ -79,4 +81,10 @@ function [x_hist, gf_hist, time_taken, k] = preconditionedCG(A, b, x0, max_iter,
 	fprintf('\n');
 	disp(['Total number of iterations: ' num2str(k) ' , Total time taken: ' num2str(sum(time_taken)*10^6) ' micro seconds']);
 	fprintf('\n');
+
+    %Calculating the \hat{A} to study the eigenvalues and condition number
+	Cinv = inv(C);
+	Ahat = Cinv*A*Cinv';
+	eig_values = eig(Ahat);
+	kappa = cond(Ahat);
 end
