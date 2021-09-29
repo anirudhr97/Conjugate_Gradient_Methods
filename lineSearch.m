@@ -27,17 +27,17 @@ function alpha = lineSearch(f,gradf,gradphi_0,c1,c2,x,phi_x,pk,rho)
  
 
 % Initialize the alpha by specifying the range it can take. alpha > 0
-alpha_0  = 0; alpha_max = 20; alpha_1  = 1; % alpha_1 \in (0,alpha_max)
+alpha_0  = 0; alpha_max = 200; alpha_1  = 1; % alpha_1 \in (0,alpha_max)
 alpha_i = alpha_1; alpha_prev = alpha_0;
 phi_prev  = phi_x; phi_0 = phi_x;
 x_prev = x; i = 0;
-
-while true
+ 
+while true && (abs(alpha_prev - alpha_i) > 1e-4)
     
     xi          = x_prev + alpha_i*pk;
     phi_xi      = f(xi);
     gradphi_xi  = gradf(xi)'*pk;
-    
+      
     % alpha_1 violates the sufficient condition 
     if  (phi_xi  > phi_0 + c1*alpha_i*gradphi_0) || ((phi_xi >= phi_prev ) && (i > 0))
         alpha = zoom(f,gradf,gradphi_0,c1,c2,x,phi_0,phi_prev,pk,alpha_prev,alpha_i);
